@@ -1,5 +1,7 @@
 import os
 from PIL import Image
+from PIL import ImageFilter
+import time as tm
 
 # Crear carpeta donde se guardarán las copias
 os.makedirs("imagenes", exist_ok=True)
@@ -16,3 +18,34 @@ for i in range(cantidad):
     imagen.save(nombre)
 
 print(f"Se generaron {cantidad} imágenes correctamente")
+
+def procesar_imagen(ruta):
+    # Abrir imagen
+    img = Image.open(ruta)
+    
+    # Aplicar filtro (escala de grises)
+    #img = img.convert("L")
+    img = img.filter(ImageFilter.FIND_EDGES)
+    
+    # Crear carpeta de salida si no existe
+    os.makedirs("procesadas", exist_ok=True)
+    
+    # Obtener nombre de la imagen
+    nombre = os.path.basename(ruta)
+    
+    # Guardar imagen procesada
+    nueva_ruta = os.path.join("procesadas", nombre)
+    img.save(nueva_ruta)
+
+def secuencial():
+    ruta = "imagenes"
+    lista_imagenes = os.listdir(ruta)
+    inicio = tm.time()
+    for image in lista_imagenes:
+        ruta_completa = os.path.join(ruta, image)
+        procesar_imagen(ruta_completa)
+    fin = tm.time()
+    print("Se ha terminado el procesado")
+    print("Tiempo de ejecución : ", fin-inicio)
+
+secuencial()
