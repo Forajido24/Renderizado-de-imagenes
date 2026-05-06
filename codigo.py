@@ -46,6 +46,6 @@ def secuencial():
         procesar_imagen(ruta_completa)
     fin = tm.time()
     print("Se ha terminado el procesado")
-    print("Tiempo de ejecución : ", fin-inicio)
+    print("Tiempo de ejecución secuencial : ", fin-inicio)
 
 secuencial()
