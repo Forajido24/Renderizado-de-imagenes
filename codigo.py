@@ -2,22 +2,8 @@ import os
 from PIL import Image
 from PIL import ImageFilter
 import time as tm
+from multiprocessing import Pool
 
-# Crear carpeta donde se guardarán las copias
-os.makedirs("imagenes", exist_ok=True)
-
-# Cargar la imagen original
-imagen = Image.open("Foto proyecto.jpeg")  # asegúrate que el nombre coincida
-
-# Número de copias
-cantidad = 50
-
-# Crear copias
-for i in range(cantidad):
-    nombre = f"imagenes/img_{i}.jpg"
-    imagen.save(nombre)
-
-print(f"Se generaron {cantidad} imágenes correctamente")
 
 def procesar_imagen(ruta):
     # Abrir imagen
@@ -48,4 +34,37 @@ def secuencial():
     print("Se ha terminado el procesado")
     print("Tiempo de ejecución secuencial : ", fin-inicio)
 
-secuencial()
+
+def paralelo():
+    ruta = "imagenes"
+    lista_imagenes = [os.path.join(ruta,archivo) for archivo in os.listdir(ruta)]
+    inicio= tm.time()
+    with Pool() as p:
+        p.map(procesar_imagen, lista_imagenes)
+    fin= tm.time()
+    print("Se ha terminado el procesado")
+    print("Tiempo de ejecución paralelo : ", fin-inicio)
+
+
+
+if __name__ == "__main__":
+    
+    # Crear carpeta donde se guardarán las copias
+    os.makedirs("imagenes", exist_ok=True)
+
+    # Cargar la imagen original
+    imagen = Image.open("foto/Foto_proyecto.jpeg")  # asegúrate que el nombre coincida
+
+    # Número de copias
+    cantidad = 50
+
+    # Crear copias
+    for i in range(cantidad):
+        nombre = f"imagenes/img_{i}.jpg"
+        imagen.save(nombre)
+
+    print(f"Se generaron {cantidad} imágenes correctamente")
+
+    ts = secuencial()
+
+    tp = paralelo()
