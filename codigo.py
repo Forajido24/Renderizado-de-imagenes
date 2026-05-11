@@ -46,7 +46,6 @@ def paralelo():
     print("Tiempo de ejecución paralelo : ", fin-inicio)
 
 
-
 if __name__ == "__main__":
     
     # Crear carpeta donde se guardarán las copias
