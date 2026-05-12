@@ -33,21 +33,23 @@ def secuencial():
     fin = tm.time()
     print("Se ha terminado el procesado")
     print("Tiempo de ejecución secuencial : ", fin-inicio)
+    print("-" * 50)
+    return fin - inicio
 
 
-def paralelo():
+def paralelo(num_procesos):
     ruta = "imagenes"
     lista_imagenes = [os.path.join(ruta,archivo) for archivo in os.listdir(ruta)]
     inicio= tm.time()
-    with Pool() as p:
+    with Pool(processes=num_procesos) as p:
         p.map(procesar_imagen, lista_imagenes)
     fin= tm.time()
-    print("Se ha terminado el procesado")
-    print("Tiempo de ejecución paralelo : ", fin-inicio)
+    tiempo= fin - inicio
+    print(f"Tiempo paralelo con {num_procesos} procesos: {tiempo} ")
+    return tiempo
 
 
 if __name__ == "__main__":
-    
     # Crear carpeta donde se guardarán las copias
     os.makedirs("imagenes", exist_ok=True)
 
@@ -61,9 +63,24 @@ if __name__ == "__main__":
     for i in range(cantidad):
         nombre = f"imagenes/img_{i}.jpg"
         imagen.save(nombre)
-
+    
     print(f"Se generaron {cantidad} imágenes correctamente")
+    print("-" * 50)
 
+    #Procesar imágenes secuencialmente
     ts = secuencial()
+    
+    #Procesar imágenes en paralelo
+    for procesos in [1, 2, 4, 8]:
 
-    tp = paralelo()
+        tp = paralelo(procesos)
+
+        speedup = ts / tp
+
+        print(f"Speedup con {procesos} procesos: {speedup}")
+
+        print("-" * 50)
+
+
+    
+    
